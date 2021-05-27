@@ -1,24 +1,45 @@
 package com.mobdeve.nievas.jobscopeforapplicants;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-public class FindJobActivity extends AppCompatActivity implements View.OnClickListener {
+import com.google.gson.Gson;
+import com.mongodb.util.JSON;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
+public class FindJobActivity extends AppCompatActivity implements View.OnClickListener, JobListingAdapter.OnOrderListener {
 
     private RecyclerView rvJobListings;
     private Button btnProfile;
     private Button btnLogout;
     private Button btnFindJobs;
+    private JobListingAdapter jobListingAdapter;
 
     private SharedPreferences sharedpreferences; //for storing current logged user
+    private ArrayList<JobListing> arrJobListing = new ArrayList<>();
+
+    private Retrofit retrofit;
+    private RetrofitInterface retrofitInterface;
+    private String BASE_URL = "http://10.0.2.2:3000"; //localhost of computer or emulator idk
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +47,15 @@ public class FindJobActivity extends AppCompatActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find_job);
 
+        // for connecting to mongodb/js server
+        retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        retrofitInterface = retrofit.create(RetrofitInterface.class);
+
         rvJobListings = findViewById(R.id.rvJobListings);
+
         btnProfile = findViewById(R.id.btnProfile);
         btnLogout = findViewById(R.id.btnLogout);
         btnFindJobs = findViewById(R.id.btnFindJobs);
@@ -35,6 +64,69 @@ public class FindJobActivity extends AppCompatActivity implements View.OnClickLi
         btnLogout.setOnClickListener(this);
         btnFindJobs.setOnClickListener(this);
 
+        JobListing joblisting;
+        joblisting = new JobListing();
+        joblisting.setJobListingID(1);
+        joblisting.setDescription("String description");
+        joblisting.setEducation("String education");
+        joblisting.setEmployer("String employer");
+        joblisting.setLocation("String location");
+        joblisting.setResponsibilities("String responsibilities");
+        joblisting.setSpecialization("String specialization");
+        joblisting.setTitle("String title");
+        arrJobListing.add(0, joblisting);
+
+        // serves as a bridge for data from UI to server
+        HashMap<String, String> map = new HashMap<>();
+
+        Call<ArrayList> call = retrofitInterface.GetAllJobListing(map);
+
+        // calls an http request
+        call.enqueue(new Callback<ArrayList>() {
+            @Override
+            public void onResponse(Call<ArrayList> call, Response<ArrayList> response) {
+                if(response.code() == 200){
+
+                    Log.d("LIST",  "b4" + String.valueOf(arrJobListing.get(0)));
+                    Gson gson = new Gson();
+                    ArrayList result = response.body(); // the result from server
+
+
+                    for( int i = 0; i<result.size(); i++){
+                        String temp = String.valueOf(result.get(i));
+                        JobListing j =  gson.fromJson(temp, JobListing.class );
+                        arrJobListing.add(0, j);
+                    }
+                    Log.d("LIST",  "OK" + String.valueOf(arrJobListing.get(0).getJobListingID()));
+
+                    // lists the jobs in recyclerview
+                    jobListingAdapter = new JobListingAdapter(FindJobActivity.this, arrJobListing , FindJobActivity.this);
+                    rvJobListings.setAdapter(jobListingAdapter);
+                    rvJobListings.setLayoutManager(new LinearLayoutManager(FindJobActivity.this));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList> call, Throwable t) {
+                //shows the error
+                Toast.makeText(FindJobActivity.this, t.getMessage() ,
+                        Toast.LENGTH_LONG).show();
+                Log.d("LIST",  t.getMessage());
+
+            }
+        });
+
+
+    }
+
+
+
+    @Override
+    public void onOrderClick(int position) {
+        Intent intent = new Intent(this,  JobDetailsActivity.class);
+        //putting the Serialized object in Intent
+        intent.putExtra("job", arrJobListing.get(position));
+        startActivity(intent);
 
     }
 
@@ -76,5 +168,6 @@ public class FindJobActivity extends AppCompatActivity implements View.OnClickLi
 
 
     }
+
 
 }

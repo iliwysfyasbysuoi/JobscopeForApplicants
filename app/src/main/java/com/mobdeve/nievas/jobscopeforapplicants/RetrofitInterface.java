@@ -1,4 +1,5 @@
 package com.mobdeve.nievas.jobscopeforapplicants;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import retrofit2.Call;
@@ -12,5 +13,8 @@ public interface RetrofitInterface {
 
     @POST("/ApplicantRegister")
     Call<Void> executeApplicantRegister(@Body HashMap<String, String> map);
+
+    @POST("/GetAllJobListing")
+    Call<ArrayList> GetAllJobListing(@Body HashMap<String, String> map);
 
 }
