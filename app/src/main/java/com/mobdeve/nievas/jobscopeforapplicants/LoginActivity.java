@@ -66,14 +66,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         this.etUsername = findViewById(R.id.etUsername);
         this.etPassword = findViewById(R.id.etPassword);
 
-
-
-
-
-
-
-
-
     }
 
     @Override
@@ -82,10 +74,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         switch(v.getId()){
 
             case R.id.btnLogin:{
-                /* TODO code for credential validation
-                   use MongoDB database
-                 */
-//                    handleLoginDialog();
 
                 // serves as a bridge for data from UI to server
                 HashMap<String, String> map = new HashMap<>();

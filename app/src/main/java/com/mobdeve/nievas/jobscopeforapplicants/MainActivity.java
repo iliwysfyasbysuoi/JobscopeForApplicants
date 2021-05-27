@@ -17,23 +17,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
 
-
-        /*
-            TODO conditional for login/homepage
-            there will be some sort of conditional here.
-            If user is not logged in, go to LoginActivity
-            else, go to homepage of employer
-
-            plan: implement in shared preferences if the user is logged in.
-            when login is successful, save in sharedpreferences.
-            when user logs out, delete login data in shared preferences.
-         */
-
         sharedpreferences = getSharedPreferences("SavedPreferences", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
         String currentUser = sharedpreferences.getString("LOGGED_USER_KEY", "");
 
         Toast.makeText(this, currentUser, Toast.LENGTH_LONG).show();
+
 
         if(currentUser.equals("none") == true || currentUser.equals("") == true ){
             // goes to LoginActivity

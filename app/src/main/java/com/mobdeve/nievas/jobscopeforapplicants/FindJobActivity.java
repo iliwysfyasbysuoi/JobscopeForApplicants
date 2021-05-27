@@ -91,12 +91,21 @@ public class FindJobActivity extends AppCompatActivity implements View.OnClickLi
                     Gson gson = new Gson();
                     ArrayList result = response.body(); // the result from server
 
-
+                    //this code puts the JobListing objects from server to the arrJobListing passed to the recyclerview.
                     for( int i = 0; i<result.size(); i++){
                         String temp = String.valueOf(result.get(i));
-                        JobListing j =  gson.fromJson(temp, JobListing.class );
-                        arrJobListing.add(0, j);
+                        /*
+                            TODO FIX THE GSON
+                            idk, nagwork na siya pero nung nawalan ng net biglang nasira??????????
+                            when u uncomment the next two lines of codes, nagcclose yung app, WITHOUT ERROR kaya hirap i-debug
+
+                            gson code is converting JSON string to JobListing object.
+                         */
+
+//                        JobListing j =  gson.fromJson(temp, JobListing.class );
+//                        arrJobListing.add(0, j);
                     }
+
                     Log.d("LIST",  "OK" + String.valueOf(arrJobListing.get(0).getJobListingID()));
 
                     // lists the jobs in recyclerview
