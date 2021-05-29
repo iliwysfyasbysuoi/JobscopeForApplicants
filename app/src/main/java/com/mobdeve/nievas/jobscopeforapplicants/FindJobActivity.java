@@ -64,19 +64,9 @@ public class FindJobActivity extends AppCompatActivity implements View.OnClickLi
         btnLogout.setOnClickListener(this);
         btnFindJobs.setOnClickListener(this);
 
-        JobListing joblisting;
-        joblisting = new JobListing();
-        joblisting.setJobListingID(1);
-        joblisting.setDescription("String description");
-        joblisting.setEducation("String education");
-        joblisting.setEmployer("String employer");
-        joblisting.setLocation("String location");
-        joblisting.setResponsibilities("String responsibilities");
-        joblisting.setSpecialization("String specialization");
-        joblisting.setTitle("String title");
-        arrJobListing.add(0, joblisting);
 
         // serves as a bridge for data from UI to server
+        arrJobListing.clear();
         HashMap<String, String> map = new HashMap<>();
 
         Call<ArrayList> call = retrofitInterface.GetAllJobListing(map);
@@ -86,35 +76,23 @@ public class FindJobActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             public void onResponse(Call<ArrayList> call, Response<ArrayList> response) {
                 if(response.code() == 200){
-
-                    Log.d("LIST",  "b4" + String.valueOf(arrJobListing.get(0)));
                     Gson gson = new Gson();
                     ArrayList result = response.body(); // the result from server
-
-                    //this code puts the JobListing objects from server to the arrJobListing passed to the recyclerview.
-                    for( int i = 0; i<result.size(); i++){
+                    Log.d("LIST",  "result.zise() " + result.size());
+                    for( int i = 0; i < result.size() ; i++ ){
                         String temp = String.valueOf(result.get(i));
-                        /*
-                            TODO FIX THE GSON
-                            idk, nagwork na siya pero nung nawalan ng net biglang nasira??????????
-                            when u uncomment the next two lines of codes, nagcclose yung app, WITHOUT ERROR kaya hirap i-debug
-
-                            gson code is converting JSON string to JobListing object.
-                         */
-
-//                        JobListing j =  gson.fromJson(temp, JobListing.class );
-//                        arrJobListing.add(0, j);
+                        JobListing j =  gson.fromJson(temp, JobListing.class );
+                        arrJobListing.add(0, j);
                     }
 
-                    Log.d("LIST",  "OK" + String.valueOf(arrJobListing.get(0).getJobListingID()));
-
                     // lists the jobs in recyclerview
-                    jobListingAdapter = new JobListingAdapter(FindJobActivity.this, arrJobListing , FindJobActivity.this);
-                    rvJobListings.setAdapter(jobListingAdapter);
-                    rvJobListings.setLayoutManager(new LinearLayoutManager(FindJobActivity.this));
+                    if (arrJobListing.size() != 0) {
+                        jobListingAdapter = new JobListingAdapter(FindJobActivity.this, arrJobListing, FindJobActivity.this);
+                        rvJobListings.setAdapter(jobListingAdapter);
+                        rvJobListings.setLayoutManager(new LinearLayoutManager(FindJobActivity.this));
+                    }
                 }
             }
-
             @Override
             public void onFailure(Call<ArrayList> call, Throwable t) {
                 //shows the error
@@ -124,9 +102,50 @@ public class FindJobActivity extends AppCompatActivity implements View.OnClickLi
 
             }
         });
-
-
     }
+
+    public void onPause() {
+        super.onPause();
+        arrJobListing.clear();
+
+        // serves as a bridge for data from UI to server
+        HashMap<String, String> map = new HashMap<>();
+        Call<ArrayList> call = retrofitInterface.GetAllJobListing(map);
+
+        // calls an http request
+        call.enqueue(new Callback<ArrayList>() {
+            @Override
+            public void onResponse(Call<ArrayList> call, Response<ArrayList> response) {
+                if(response.code() == 200){
+                    Gson gson = new Gson();
+                    ArrayList result = response.body(); // the result from server
+
+                    Log.d("LIST",  "result.zise() " + result.size());
+                    for( int i = 0; i < result.size(); i++){
+                        String temp = String.valueOf(result.get(i));
+                        JobListing j =  gson.fromJson(temp, JobListing.class );
+                        arrJobListing.add(0, j);
+                    }
+
+                    // lists the jobs in recyclerview
+                    if (arrJobListing.size() != 0) {
+                        jobListingAdapter = new JobListingAdapter(FindJobActivity.this, arrJobListing, FindJobActivity.this);
+                        rvJobListings.setAdapter(jobListingAdapter);
+                        rvJobListings.setLayoutManager(new LinearLayoutManager(FindJobActivity.this));
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList> call, Throwable t) {
+                //shows the error
+                Toast.makeText(FindJobActivity.this, t.getMessage() ,
+                        Toast.LENGTH_LONG).show();
+                Log.d("LIST",  t.getMessage());
+            }
+        });
+    }
+
 
 
 
@@ -136,7 +155,6 @@ public class FindJobActivity extends AppCompatActivity implements View.OnClickLi
         //putting the Serialized object in Intent
         intent.putExtra("job", arrJobListing.get(position));
         startActivity(intent);
-
     }
 
 

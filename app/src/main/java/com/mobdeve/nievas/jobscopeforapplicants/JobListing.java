@@ -1,5 +1,7 @@
 package com.mobdeve.nievas.jobscopeforapplicants;
 
+import org.bson.types.ObjectId;
+
 import java.io.Serializable;
 
 public class JobListing implements Serializable {
@@ -90,4 +92,8 @@ public class JobListing implements Serializable {
     public void setEducation(String education) {
         this.education = education;
     }
+
+
+
+
 }

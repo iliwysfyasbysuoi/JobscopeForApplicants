@@ -19,7 +19,6 @@ public class JobListingAdapter extends RecyclerView.Adapter<JobListingAdapter.My
     private OnOrderListener mOnOrderListener;
 
     public JobListingAdapter(FindJobActivity findJobActivity, ArrayList<JobListing> data, OnOrderListener onOrderListener){
-
         this.orderArrayList = data;
         this.mOnOrderListener = onOrderListener;
     }
@@ -30,11 +29,9 @@ public class JobListingAdapter extends RecyclerView.Adapter<JobListingAdapter.My
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
         //Create the ViewGroup by inflating the layout in our activity's context
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.job_listing_card, parent, false);
-
         //return an instance of the ViewHolder
         return new MyViewHolder(view, mOnOrderListener);
     }
@@ -45,7 +42,6 @@ public class JobListingAdapter extends RecyclerView.Adapter<JobListingAdapter.My
         holder.setEmployer(this.orderArrayList.get(position).getEmployer());
         holder.setLocation(this.orderArrayList.get(position).getLocation());
         holder.setDescription(this.orderArrayList.get(position).getDescription());
-
 
     }
 
@@ -90,7 +86,10 @@ public class JobListingAdapter extends RecyclerView.Adapter<JobListingAdapter.My
 
         @Override
         public void onClick(View v) {
+
             onOrderListener.onOrderClick(getAdapterPosition());
+
+
         }
     }
 
