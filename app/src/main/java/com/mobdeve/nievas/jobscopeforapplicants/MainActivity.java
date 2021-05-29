@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = sharedpreferences.edit();
         String currentUser = sharedpreferences.getString("LOGGED_USER_KEY", "");
 
-        Toast.makeText(this, currentUser, Toast.LENGTH_LONG).show();
+//        Toast.makeText(this, currentUser, Toast.LENGTH_LONG).show();
 
 
         if(currentUser.equals("none") == true || currentUser.equals("") == true ){

@@ -166,6 +166,8 @@ public class FindJobActivity extends AppCompatActivity implements View.OnClickLi
 
 
             case R.id.btnProfile: {
+                Intent intentProfile = new Intent(this, MyProfileActivity.class);
+                startActivity(intentProfile);
 
             }
             break;
