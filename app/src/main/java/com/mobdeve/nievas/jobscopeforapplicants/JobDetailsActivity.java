@@ -85,8 +85,6 @@ public class JobDetailsActivity extends AppCompatActivity implements View.OnClic
         map.put("applicant", sharedPreferences.getString("LOGGED_USER_KEY", ""));
         map.put("jobListingID", String.valueOf(JOBLISTINGID));
 
-
-
         Call<Void> call = retrofitInterface.executeUserHasAppliedAlready(map);
         call.enqueue(new Callback<Void>() {
             @Override

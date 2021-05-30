@@ -1,5 +1,6 @@
 package com.mobdeve.nievas.jobscopeforapplicants;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,31 +11,29 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-import retrofit2.Callback;
 
-public class JobListingAdapter extends RecyclerView.Adapter<JobListingAdapter.MyViewHolder>{
+public class MyApplicationsAdapter extends RecyclerView.Adapter<MyApplicationsAdapter.MyViewHolder>{
 
+    private ArrayList<Applications> orderArrayList;
+    private MyApplicationsAdapter.OnOrderListener mOnOrderListener;
 
-    private ArrayList<JobListing> orderArrayList;
-    private OnOrderListener mOnOrderListener;
-
-    public JobListingAdapter(FindJobActivity findJobActivity, ArrayList<JobListing> data, OnOrderListener onOrderListener){
+    public MyApplicationsAdapter(MyProfileActivity myProfileActivity, ArrayList<Applications> data){
         this.orderArrayList = data;
-        this.mOnOrderListener = onOrderListener;
+//        this.mOnOrderListener = onOrderListener;
     }
 
     @NonNull
     @Override
-    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public MyApplicationsAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         //Create the ViewGroup by inflating the layout in our activity's context
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.job_listing_card, parent, false);
         //return an instance of the ViewHolder
-        return new MyViewHolder(view, mOnOrderListener);
+        return new MyApplicationsAdapter.MyViewHolder(view, mOnOrderListener);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MyApplicationsAdapter.MyViewHolder holder, int position) {
         holder.setTitle(this.orderArrayList.get(position).getTitle());
         holder.setEmployer(this.orderArrayList.get(position).getEmployer());
         holder.setLocation(this.orderArrayList.get(position).getLocation());
@@ -50,9 +49,9 @@ public class JobListingAdapter extends RecyclerView.Adapter<JobListingAdapter.My
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private TextView title, employer, location, description ;
-        OnOrderListener onOrderListener;
+        MyApplicationsAdapter.OnOrderListener onOrderListener;
 
-        public MyViewHolder(@NonNull View itemView, OnOrderListener mOnOrderListener) {
+        public MyViewHolder(@NonNull View itemView, MyApplicationsAdapter.OnOrderListener mOnOrderListener) {
             super(itemView);
 
             //instantiate the views
@@ -92,6 +91,7 @@ public class JobListingAdapter extends RecyclerView.Adapter<JobListingAdapter.My
 
     public interface OnOrderListener{
         void onOrderClick(int position);
+
     }
 
 

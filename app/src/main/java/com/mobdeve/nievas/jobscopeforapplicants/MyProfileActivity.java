@@ -1,12 +1,15 @@
 package com.mobdeve.nievas.jobscopeforapplicants;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,7 +24,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MyProfileActivity extends AppCompatActivity {
+public class MyProfileActivity extends AppCompatActivity implements MyApplicationsAdapter.OnOrderListener{
 
     private TextView tvName;
     private TextView   tvUsername ;
@@ -31,6 +34,7 @@ public class MyProfileActivity extends AppCompatActivity {
     private TextView  tvExperience  ;
     private TextView  tvSkills;
     private RecyclerView rvMyApplications;
+    private MyApplicationsAdapter myApplicationsAdapter;
 
     private SharedPreferences sharedPreferences;
     private Retrofit retrofit;
@@ -90,6 +94,12 @@ public class MyProfileActivity extends AppCompatActivity {
 
                     Log.d("GETMYPROFILE", String.valueOf(arrMyApplications.get(0).getEducation()));
 
+//                    // lists the jobs in recyclerview
+                    if (arrMyApplications.size() != 0) {
+                        myApplicationsAdapter = new MyApplicationsAdapter(MyProfileActivity.this, arrMyApplications);
+                        rvMyApplications.setAdapter(myApplicationsAdapter);
+                        rvMyApplications.setLayoutManager(new LinearLayoutManager(MyProfileActivity.this));
+                    }
 
 
 
@@ -113,5 +123,14 @@ public class MyProfileActivity extends AppCompatActivity {
 
 
     }
+
+
+    @Override
+    public void onOrderClick(int position) {
+        Toast.makeText(MyProfileActivity.this, "CLICKED",
+                Toast.LENGTH_LONG).show();
+
+    }
+
 
 }
