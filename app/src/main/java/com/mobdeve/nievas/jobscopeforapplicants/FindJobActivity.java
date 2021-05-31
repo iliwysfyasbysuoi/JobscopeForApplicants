@@ -69,21 +69,30 @@ public class FindJobActivity extends AppCompatActivity implements View.OnClickLi
         arrJobListing.clear();
         HashMap<String, String> map = new HashMap<>();
 
-        Call<ArrayList> call = retrofitInterface.GetAllJobListing(map);
+        Call<JobListingResult> call = retrofitInterface.GetAllJobListing(map);
 
         // calls an http request
-        call.enqueue(new Callback<ArrayList>() {
+        call.enqueue(new Callback<JobListingResult>() {
             @Override
-            public void onResponse(Call<ArrayList> call, Response<ArrayList> response) {
+            public void onResponse(Call<JobListingResult> call, Response<JobListingResult> response) {
                 if(response.code() == 200){
                     Gson gson = new Gson();
-                    ArrayList result = response.body(); // the result from server
-                    Log.d("LIST",  "result.zise() " + result.size());
-                    for( int i = 0; i < result.size() ; i++ ){
-                        String temp = String.valueOf(result.get(i));
-                        JobListing j =  gson.fromJson(temp, JobListing.class );
-                        arrJobListing.add(0, j);
+//                    ArrayList<JobListing> result = response.body(); // the result from server
+                    JobListingResult result = response.body();
+
+//                    Log.d("LIST",  "result.zise() " + result.getArrJobListing().get(0).getJobListingID());
+
+
+
+                    int i;
+                    JobListing JO, job;
+                    for(  i = 0; i < result.getArrJobListing().size() ; i++ ){
+                        JO =  result.getArrJobListing().get(i);
+                        job = new JobListing(JO.getJobListingID(), JO.getEmployer(),JO.getTitle(),JO.getDescription(),JO.getLocation(),JO.getResponsibilities(),JO.getSpecialization(),JO.getEducation());
+                        arrJobListing.add(job);
                     }
+
+
 
                     // lists the jobs in recyclerview
                     if (arrJobListing.size() != 0) {
@@ -94,7 +103,7 @@ public class FindJobActivity extends AppCompatActivity implements View.OnClickLi
                 }
             }
             @Override
-            public void onFailure(Call<ArrayList> call, Throwable t) {
+            public void onFailure(Call<JobListingResult> call, Throwable t) {
                 //shows the error
                 Toast.makeText(FindJobActivity.this, t.getMessage() ,
                         Toast.LENGTH_LONG).show();
@@ -106,26 +115,34 @@ public class FindJobActivity extends AppCompatActivity implements View.OnClickLi
 
     public void onPause() {
         super.onPause();
-        arrJobListing.clear();
-
         // serves as a bridge for data from UI to server
+        arrJobListing.clear();
         HashMap<String, String> map = new HashMap<>();
-        Call<ArrayList> call = retrofitInterface.GetAllJobListing(map);
+
+        Call<JobListingResult> call = retrofitInterface.GetAllJobListing(map);
 
         // calls an http request
-        call.enqueue(new Callback<ArrayList>() {
+        call.enqueue(new Callback<JobListingResult>() {
             @Override
-            public void onResponse(Call<ArrayList> call, Response<ArrayList> response) {
+            public void onResponse(Call<JobListingResult> call, Response<JobListingResult> response) {
                 if(response.code() == 200){
                     Gson gson = new Gson();
-                    ArrayList result = response.body(); // the result from server
+//                    ArrayList<JobListing> result = response.body(); // the result from server
+                    JobListingResult result = response.body();
 
-                    Log.d("LIST",  "result.zise() " + result.size());
-                    for( int i = 0; i < result.size(); i++){
-                        String temp = String.valueOf(result.get(i));
-                        JobListing j =  gson.fromJson(temp, JobListing.class );
-                        arrJobListing.add(0, j);
+                    Log.d("LIST",  "result.zise() " + result.getArrJobListing().get(0).getJobListingID());
+
+
+
+                    int i;
+                    JobListing JO, job;
+                    for(  i = 0; i < result.getArrJobListing().size() ; i++ ){
+                        JO =  result.getArrJobListing().get(i);
+                        job = new JobListing(JO.getJobListingID(), JO.getEmployer(),JO.getTitle(),JO.getDescription(),JO.getLocation(),JO.getResponsibilities(),JO.getSpecialization(),JO.getEducation());
+                        arrJobListing.add(job);
                     }
+
+
 
                     // lists the jobs in recyclerview
                     if (arrJobListing.size() != 0) {
@@ -135,13 +152,13 @@ public class FindJobActivity extends AppCompatActivity implements View.OnClickLi
                     }
                 }
             }
-
             @Override
-            public void onFailure(Call<ArrayList> call, Throwable t) {
+            public void onFailure(Call<JobListingResult> call, Throwable t) {
                 //shows the error
                 Toast.makeText(FindJobActivity.this, t.getMessage() ,
                         Toast.LENGTH_LONG).show();
                 Log.d("LIST",  t.getMessage());
+
             }
         });
     }

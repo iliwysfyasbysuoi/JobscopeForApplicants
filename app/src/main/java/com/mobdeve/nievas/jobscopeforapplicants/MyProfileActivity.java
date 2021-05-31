@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -35,6 +36,7 @@ public class MyProfileActivity extends AppCompatActivity implements MyApplicatio
     private TextView  tvSkills;
     private RecyclerView rvMyApplications;
     private MyApplicationsAdapter myApplicationsAdapter;
+    ArrayList<Applications> arrMyApplications = new ArrayList<>();
 
     private SharedPreferences sharedPreferences;
     private Retrofit retrofit;
@@ -75,10 +77,10 @@ public class MyProfileActivity extends AppCompatActivity implements MyApplicatio
             public void onResponse(Call<MyProfileResult> call, Response<MyProfileResult> response) {
 
                 MyProfileResult myProfileResult = response.body();
-                ArrayList<Applications> arrMyApplications = new ArrayList<>();
+
                 arrMyApplications = myProfileResult.getArrApplications();
 
-
+                Log.d("myprofileresult", String.valueOf(myProfileResult.getArrApplications()));
                 // if successful
                 if (response.code() == 200) {
 
@@ -92,11 +94,11 @@ public class MyProfileActivity extends AppCompatActivity implements MyApplicatio
                     tvSkills.setText("Skills: " + myProfileResult.getSkill());
 
 
-                    Log.d("GETMYPROFILE", String.valueOf(arrMyApplications.get(0).getEducation()));
+//                    Log.d("GETMYPROFILE", String.valueOf(arrMyApplications.get(0).getEducation()));
 
 //                    // lists the jobs in recyclerview
                     if (arrMyApplications.size() != 0) {
-                        myApplicationsAdapter = new MyApplicationsAdapter(MyProfileActivity.this, arrMyApplications);
+                        myApplicationsAdapter = new MyApplicationsAdapter(MyProfileActivity.this, arrMyApplications, MyProfileActivity.this);
                         rvMyApplications.setAdapter(myApplicationsAdapter);
                         rvMyApplications.setLayoutManager(new LinearLayoutManager(MyProfileActivity.this));
                     }
@@ -125,12 +127,19 @@ public class MyProfileActivity extends AppCompatActivity implements MyApplicatio
     }
 
 
+//    @Override
+//    public void onOrderClick(int position) {
+//        Toast.makeText(MyProfileActivity.this, "CLICKED",
+//                Toast.LENGTH_LONG).show();
+//
+//    }
+
     @Override
     public void onOrderClick(int position) {
-        Toast.makeText(MyProfileActivity.this, "CLICKED",
-                Toast.LENGTH_LONG).show();
-
+        Intent intent = new Intent(this,  JobDetailsActivity.class);
+        //putting the Serialized object in Intent
+        intent.putExtra("job", (Parcelable) arrMyApplications.get(position));
+        startActivity(intent);
     }
-
 
 }

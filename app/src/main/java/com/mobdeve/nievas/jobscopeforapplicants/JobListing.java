@@ -5,6 +5,7 @@ import org.bson.types.ObjectId;
 import java.io.Serializable;
 
 public class JobListing implements Serializable {
+    private String _id;
     private Integer jobListingID;
     private String employer;
     private String title;
@@ -94,6 +95,11 @@ public class JobListing implements Serializable {
     }
 
 
-
-
+//    public ObjectId get_id() {
+//        return _id;
+//    }
+//
+//    public void set_id(ObjectId _id) {
+//        this._id = _id;
+//    }
 }

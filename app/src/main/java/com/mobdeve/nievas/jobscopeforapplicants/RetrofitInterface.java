@@ -15,7 +15,7 @@ public interface RetrofitInterface {
     Call<Void> executeApplicantRegister(@Body HashMap<String, String> map);
 
     @POST("/GetAllJobListing")
-    Call<ArrayList> GetAllJobListing(@Body HashMap<String, String> map);
+    Call<JobListingResult> GetAllJobListing(@Body HashMap<String, String> map);
 
     @POST("/ApplyForJob")
     Call<Void> executeApplyForJob(@Body HashMap<String, String> map);

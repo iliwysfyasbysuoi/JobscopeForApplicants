@@ -17,9 +17,9 @@ public class MyApplicationsAdapter extends RecyclerView.Adapter<MyApplicationsAd
     private ArrayList<Applications> orderArrayList;
     private MyApplicationsAdapter.OnOrderListener mOnOrderListener;
 
-    public MyApplicationsAdapter(MyProfileActivity myProfileActivity, ArrayList<Applications> data){
+    public MyApplicationsAdapter(MyProfileActivity myProfileActivity, ArrayList<Applications> data, OnOrderListener onOrderListener){
         this.orderArrayList = data;
-//        this.mOnOrderListener = onOrderListener;
+        this.mOnOrderListener = onOrderListener;
     }
 
     @NonNull
